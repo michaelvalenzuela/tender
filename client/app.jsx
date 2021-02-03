@@ -1,6 +1,7 @@
 import React from 'react';
 // import Home from './pages/home';
-import Login from './pages/login';
+// import Login from './pages/login';
+import ChatRoom from './pages/chat-room';
 import AppContext from './lib/app-context';
 import PageContainer from './components/page-container';
 import Header from './components/header';
@@ -9,7 +10,8 @@ import Footer from './components/footer';
 export default class App extends React.Component {
 
   renderPage() {
-    return <Login/>;
+    // return <Login/>;
+    return <ChatRoom/>;
   }
 
   render() {
