@@ -1,7 +1,17 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
+// import ChatService from "../lib/chat-service";
 
 export default class ChatRoom extends React.Component {
+  // constructor(props){
+  //   super(props);
+  //   //this.handleSubmit = this.bind.handleSubmit(this);
+  // }
+
+  // handleSubmit(event){
+  //   console.log("ok");
+  // }
+
   render() {
     return (
       <div className="container">
@@ -18,7 +28,7 @@ export default class ChatRoom extends React.Component {
             </div>
             <div className="py-2 ps-2">
               <form id="chat-form" className="d-flex">
-                <input id="msg" className="flex-grow-1" type="text" placeholder="Enter Message" required autoComplete="off" />
+                <input id="msg" className="flex-grow-1 p-1" type="text" placeholder="Enter Message" required autoComplete="off" />
                 <button className="btn btn-primary ms-2">Send</button>
               </form>
             </div>
