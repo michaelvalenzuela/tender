@@ -19,12 +19,17 @@ export default class Login extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    const {username, room } = this.state;
     // No auth for now
     // Send the username and room to chat room
+    this.props.onSignIn({username, room});
+    window.location.hash = "chat-room";
 
   }
 
   render() {
+    const { username, room, route } = this.context;
+
     const { handleChange, handleSubmit } = this;
 
     return (

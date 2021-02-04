@@ -1,25 +1,30 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
-// Comment out to statisfy eslint. Add back later
-// import ChatService from "../lib/chat-service";
+import ChatService from "../lib/chat-service";
+import Redirect from "../components/redirect";
 
 export default class ChatRoom extends React.Component {
-  // constructor(props){
-  //   super(props);
-  //   // this.handleSubmit = this.bind.handleSubmit(this);
-  // }
+  constructor(props){
+    super(props);
+    // this.state({room:""});
+    // this.handleSubmit = this.bind.handleSubmit(this);
+  }
 
   // handleSubmit(event){
   //   console.log("ok");
   // }
 
   render() {
+    const { username, room } = this.context;
+
+    if (!username) return <Redirect to="" />
+
     return (
       <div className="container">
         <div className="row">
           <div className="col-xs-2 col-sm-2">
             <h4 className="text-center">Room:</h4>
-            <h5 className="text-center mt-1">ABCD</h5>
+            <h5 className="text-center mt-1">{room}</h5>
             <h4 className="text-center mt-4">Users</h4>
             {/* <ul></ul> */}
           </div>

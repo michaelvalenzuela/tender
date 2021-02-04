@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from './pages/login';
-// import ChatRoom from './pages/chat-room';
+import ChatRoom from './pages/chat-room';
 import AppContext from './lib/app-context';
 import PageContainer from './components/page-container';
 import Header from './components/header';
@@ -11,10 +11,11 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
-      isLoggedIn: false,
+      username: null,
+      room: "",
       route: parseRoute(window.location.hash)
     };
+    this.handleSignIn = this.handleSignIn.bind(this);
   }
 
   componentDidMount() {
@@ -28,22 +29,32 @@ export default class App extends React.Component {
 
   handleSignIn(result) {
     // Change later
-    this.setState({ user: 'Michael' });
+    const {username, room } = result;
+    this.setState({ username, room});
   }
 
   handleSignOut() {
-    this.setState({ user: null });
+    this.setState({
+       username: null,
+       room:""
+    });
   }
 
   renderPage() {
-    return <Login/>;
-    // return <ChatRoom/>;
+    const { path } = this.state.route;
+    //Switch
+    if(path === 'chat-room'){
+      return <ChatRoom />;
+    }
+    if (path === ""){
+          return <Login onSignIn={this.handleSignIn}/>;
+    }
   }
 
   render() {
-    const { user, route } = this.state;
+    const { username, room, route } = this.state;
     const { handleSignIn, handleSignOut } = this;
-    const contextValue = { user, route, handleSignIn, handleSignOut };
+    const contextValue = { username, room, route, handleSignIn, handleSignOut };
     return (
       // Add users and page routes
       <AppContext.Provider value={contextValue}>
