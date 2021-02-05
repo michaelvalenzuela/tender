@@ -6,7 +6,11 @@ import PageContainer from './components/page-container';
 import Header from './components/header';
 import Footer from './components/footer';
 import parseRoute from './lib/parse-route';
+import client from "./lib/client"
 
+/**
+ * Handles most things
+ */
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -31,6 +35,9 @@ export default class App extends React.Component {
     // Change later
     const {username, room } = result;
     this.setState({ username, room});
+    //Create a user class later
+    //Put the user inside of a chatroom
+    client({username, room});
   }
 
   handleSignOut() {
@@ -42,7 +49,7 @@ export default class App extends React.Component {
 
   renderPage() {
     const { path } = this.state.route;
-    //Switch
+    //Temporary to get the app started
     if(path === 'chat-room'){
       return <ChatRoom />;
     }

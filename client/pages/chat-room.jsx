@@ -1,13 +1,17 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
-import ChatService from "../lib/chat-service";
 import Redirect from "../components/redirect";
 
+/**
+ * This class should strictly deal with the ChatRoom
+ */
 export default class ChatRoom extends React.Component {
   constructor(props){
     super(props);
-    // this.state({room:""});
+    this.state = {chatMessages: [] };
     // this.handleSubmit = this.bind.handleSubmit(this);
+
+    //{messages, sendMessages}
   }
 
   // handleSubmit(event){

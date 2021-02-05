@@ -1,6 +1,9 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
 
+/**
+ * This class will deal with the login
+ */
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -23,12 +26,12 @@ export default class Login extends React.Component {
     // No auth for now
     // Send the username and room to chat room
     this.props.onSignIn({username, room});
+    //change hash
     window.location.hash = "chat-room";
-
   }
 
   render() {
-    const { username, room, route } = this.context;
+    // const { username, room, route } = this.context;
 
     const { handleChange, handleSubmit } = this;
 

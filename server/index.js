@@ -14,12 +14,17 @@ const io = require('socket.io')(http, {
 app.use(staticMiddleware);
 
 // Chat room server
+// Socket being a client
+// io is the server
 io.on('connection', socket => {
 
-  socket.on('username', username => {
-    socket.username = username;
-    io.emit('is_online', `${socket.username} join the chat...`);
-  });
+  //When a user joins a room
+  socket.on('joinRoom', ({username, room}) => {
+    //Hold all users later
+    socket.join(room);
+    io.to(room)
+      .emit('message',`${username} joined room ${room}`);
+  })
 
   socket.on('message', (msg, username) => {
 
@@ -27,8 +32,8 @@ io.on('connection', socket => {
     io.emit('message', msg, username);
   });
 
-  socket.on('disconnect', socket => {
-    io.emit('is_online', `${socket.username} left the chat...`);
+  socket.on('disconnect', (socket) => {
+    io.emit('leaveRoom', `${socket} left the chat...`);
   });
 
 });
