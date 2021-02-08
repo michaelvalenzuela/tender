@@ -22,12 +22,13 @@ export default class Login extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const {username, room } = this.state;
+    const { username, room } = this.state;
+    // Later add a check if they submitted a name and room
     // No auth for now
     // Send the username and room to chat room
-    this.props.onSignIn({username, room});
-    //change hash
-    window.location.hash = "chat-room";
+    this.props.onSignIn({ username, room });
+    // change hash
+    window.location.hash = 'chat-room';
   }
 
   render() {
@@ -45,6 +46,7 @@ export default class Login extends React.Component {
               name="room"
               onChange={handleChange}
               className="form-control mt-1"
+              required
               placeholder="ENTER ROOM CODE"/>
           </label>
           <label className="mt-4">NAME
@@ -52,6 +54,7 @@ export default class Login extends React.Component {
               type="text"
               id="username"
               name="username"
+              required
               onChange={handleChange}
               className="form-control mt-1"
               placeholder="ENTER NAME"/>

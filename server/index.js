@@ -18,21 +18,23 @@ app.use(staticMiddleware);
 // io is the server
 io.on('connection', socket => {
 
-  //When a user joins a room
-  socket.on('joinRoom', ({username, room}) => {
-    //Hold all users later
+  // Clean this up and finalize message names later
+
+  // When a user joins a room
+  socket.on('joinRoom', ({ username, room }) => {
+    // Hold all users later
     socket.join(room);
     io.to(room)
-      .emit('message',`${username} joined room ${room}`);
-  })
-
-  socket.on('message', (msg, username) => {
-
-    // console.log(msg, username);
-    io.emit('message', msg, username);
+      .emit('message', `${username} joined room ${room}`);
   });
 
-  socket.on('disconnect', (socket) => {
+  // What we should do for messages
+  socket.on('message', ({ username, room, message }) => {
+    io.to(room)
+      .emit('message', `${username}: ${message}`);
+  });
+
+  socket.on('disconnect', socket => {
     io.emit('leaveRoom', `${socket} left the chat...`);
   });
 

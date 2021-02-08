@@ -1,23 +1,30 @@
 import { io } from 'socket.io-client';
 
-const serverUrl = "http://localhost:3001";
+const serverUrl = 'http://localhost:3001';
 
-
-const client = ({username, room}) => {
+export default function () {
   const socket = io(serverUrl);
 
-  //When creating a client, send a message to the server with username, room
-  socket.emit('joinRoom', {username, room});
+  function joinRoom({ username, room }) {
+    socket.emit('joinRoom', { username, room });
+  }
 
-  //Listening for a message called 'message'
-  socket.on('message', (message) => {
-    console.log("FROM SERVER,", message);
-  });
+  function sendMessage({ username, room, message }) {
+    socket.emit('message', { username, room, message });
+  }
 
-  //Listening for a leaveRoom message to print who left on chat history
-  socket.on('leaveRoom', msg => {
-    console.log(msg);
-  })
+  function listenMessage(message) {
+    socket.on('message', message);
+  }
+
+  function stopListening() {
+    socket.off('message');
+  }
+
+  return {
+    joinRoom,
+    sendMessage,
+    listenMessage,
+    stopListening
+  };
 }
-
-export default client;
