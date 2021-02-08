@@ -2,7 +2,7 @@ import React from 'react';
 
 const styles = {
   page: {
-    minHeight: 'calc(100vh - 3.5rem)'
+    minHeight: 'calc(75vh - 3.5rem)'
   }
 };
 

@@ -6,7 +6,7 @@ import PageContainer from './components/page-container';
 import Header from './components/header';
 import Footer from './components/footer';
 import parseRoute from './lib/parse-route';
-import client from "./lib/client"
+import client from './lib/client';
 
 /**
  * Handles most things
@@ -16,7 +16,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       username: null,
-      room: "",
+      room: '',
+      client: client(),
       route: parseRoute(window.location.hash)
     };
     this.handleSignIn = this.handleSignIn.bind(this);
@@ -33,28 +34,40 @@ export default class App extends React.Component {
 
   handleSignIn(result) {
     // Change later
-    const {username, room } = result;
-    this.setState({ username, room});
-    //Create a user class later
-    //Put the user inside of a chatroom
-    client({username, room});
+    const { username, room } = result;
+    this.setState({ username, room });
+    // Create a user class later
+    // Put the user inside of a chatroom'
+    // console.log(client);
+    this.state.client.joinRoom({ username, room });
+    // client.joinRoom({username, room});
+    // client({username, room});
   }
 
   handleSignOut() {
     this.setState({
-       username: null,
-       room:""
+      username: null,
+      room: ''
     });
   }
 
   renderPage() {
     const { path } = this.state.route;
-    //Temporary to get the app started
-    if(path === 'chat-room'){
-      return <ChatRoom />;
+    // Temporary to get the app started
+    if (path === 'chat-room') {
+      const { username, room } = this.state;
+      return (
+        <ChatRoom
+          onSendMessage={
+            message => this.state.client.sendMessage({ username, room, message })
+          }
+          listenMessage={this.state.client.listenMessage}
+          stopListening={this.state.client.stopListening}
+        />
+      );
     }
-    if (path === ""){
-          return <Login onSignIn={this.handleSignIn}/>;
+    if (path === '') {
+      return <Login onSignIn={this.handleSignIn}/>;
     }
   }
 
