@@ -56,10 +56,14 @@ export default class App extends React.Component {
     // Temporary to get the app started
     if (path === 'chat-room') {
       const { username, room } = this.state;
+
       return (
         <ChatRoom
           onSendMessage={
-            message => this.state.client.sendMessage({ username, room, message })
+            message => {
+              const messageToServer = { username, room, message };
+              this.state.client.sendMessage(messageToServer);
+            }
           }
           listenMessage={this.state.client.listenMessage}
           stopListening={this.state.client.stopListening}

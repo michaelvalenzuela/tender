@@ -16,26 +16,62 @@ app.use(staticMiddleware);
 // Chat room server
 // Socket being a client
 // io is the server
+const rooms = [];
+const socketIds = [];
+
 io.on('connection', socket => {
 
-  // Clean this up and finalize message names later
-
-  // When a user joins a room
   socket.on('joinRoom', ({ username, room }) => {
-    // Hold all users later
+    socketIds.push({
+      socketId: socket.id,
+      username,
+      room
+    });
+
+    if (!rooms[room]) {
+      rooms[room] = [username];
+    } else {
+      rooms[room].push(username);
+    }
+
+    const messageToClient = {
+      message: `${username} joined room ${room}`,
+      users: rooms[room]
+    };
+
     socket.join(room);
     io.to(room)
-      .emit('message', `${username} joined room ${room}`);
+      .emit('message', messageToClient);
   });
 
   // What we should do for messages
-  socket.on('message', ({ username, room, message }) => {
+  // Add history later
+  // socket.on('message', ({ username, room, message }) => {
+  socket.on('message', messageFromClient => {
+    const { username, message, room } = messageFromClient;
+
+    const messageToClient = {
+      message: `${username}: ${message}`
+    };
     io.to(room)
-      .emit('message', `${username}: ${message}`);
+      .emit('message', messageToClient);
   });
 
-  socket.on('disconnect', socket => {
-    io.emit('leaveRoom', `${socket} left the chat...`);
+  socket.on('disconnect', () => {
+    const socketInfo = socketIds.find(x => x.socketId === socket.id);
+    // Guard for undefined issues
+    if (!socketInfo) {
+      return;
+    }
+    const { room, username } = socketInfo;
+    const index = rooms[room].indexOf(username);
+    rooms[room].splice(index, 1);
+
+    const messageToClient = {
+      message: `${username} left the chat...`,
+      users: rooms[room]
+    };
+    io.emit('message', messageToClient);
   });
 
 });
