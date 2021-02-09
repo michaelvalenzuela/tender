@@ -10,13 +10,15 @@ export default class ChatRoom extends React.Component {
     super(props);
     this.state = {
       chatMessages: [],
-      message: ''
+      message: '',
+      users: []
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.onMessageReceived = this.onMessageReceived.bind(this);
     this.updateChat = this.updateChat.bind(this);
+    this.updateUsers = this.updateUsers.bind(this);
   }
 
   componentDidMount() {
@@ -32,12 +34,21 @@ export default class ChatRoom extends React.Component {
     this.props.stopListening();
   }
 
-  onMessageReceived(msg) {
-    this.updateChat(msg);
+  // Modify all this... trash
+  onMessageReceived(messageFromServer) {
+    const { message, users } = messageFromServer;
+    this.updateChat(message);
+    if (users) {
+      this.updateUsers(users);
+    }
   }
 
-  updateChat(msg) {
-    this.setState({ chatMessages: this.state.chatMessages.concat(msg) });
+  updateChat(message) {
+    this.setState({ chatMessages: this.state.chatMessages.concat(message) });
+  }
+
+  updateUsers(users) {
+    this.setState({ users });
   }
 
   handleChange(event) {
@@ -73,10 +84,12 @@ export default class ChatRoom extends React.Component {
             <ul
               className="m-1 p-1"
               style={{ listStyle: 'none', textAlign: 'center' }}>
-              <li>{username}</li>
-              <li>fill</li>
-              <li>fill2</li>
-              <li>fill3</li>
+              {
+                this.state.users.map((user, i) =>
+                <li key={i}>
+                  {user}
+                </li>
+                )}
             </ul>
           </div>
 
