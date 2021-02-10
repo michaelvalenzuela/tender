@@ -30,7 +30,7 @@ export default class SearchBar extends React.Component {
     fetch(`/api/yelp/search/${this.state.location}/${this.state.category}`, req)
       .then(res => res.json())
       .then(result => {
-        console.log(result);
+        this.props.getYelpBusinesses(result);
       });
   }
 

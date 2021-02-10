@@ -25,9 +25,8 @@ app.get("/api/yelp/search/:location/:category", (req, res, next) => {
     throw new ClientError(400, "location and category are required fields");
   }
   yelp.getYelpBusinesses(location, category)
-      .then(res => {
-        //Change later, using 1 for testing purposes
-        console.log("test", res[0]);
+      .then(result => {
+        res.status(201).json(result);
       })
       .catch(err => next(err));
 });
