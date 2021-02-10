@@ -5,6 +5,7 @@ import AppContext from './lib/app-context';
 import PageContainer from './components/page-container';
 import Header from './components/header';
 import Footer from './components/footer';
+import YelpSearch from "./pages/yelp-search";
 import parseRoute from './lib/parse-route';
 import client from './lib/client';
 
@@ -53,26 +54,28 @@ export default class App extends React.Component {
 
   renderPage() {
     const { path } = this.state.route;
+    return <YelpSearch/>;
     // Temporary to get the app started
-    if (path === 'chat-room') {
-      const { username, room } = this.state;
+    //Commenting until i finish the search page
+    // if (path === 'chat-room') {
+    //   const { username, room } = this.state;
 
-      return (
-        <ChatRoom
-          onSendMessage={
-            message => {
-              const messageToServer = { username, room, message };
-              this.state.client.sendMessage(messageToServer);
-            }
-          }
-          listenMessage={this.state.client.listenMessage}
-          stopListening={this.state.client.stopListening}
-        />
-      );
-    }
-    if (path === '') {
-      return <Login onSignIn={this.handleSignIn}/>;
-    }
+    //   return (
+    //     <ChatRoom
+    //       onSendMessage={
+    //         message => {
+    //           const messageToServer = { username, room, message };
+    //           this.state.client.sendMessage(messageToServer);
+    //         }
+    //       }
+    //       listenMessage={this.state.client.listenMessage}
+    //       stopListening={this.state.client.stopListening}
+    //     />
+    //   );
+    // }
+    // if (path === '') {
+    //   return <Login onSignIn={this.handleSignIn}/>;
+    // }
   }
 
   render() {
