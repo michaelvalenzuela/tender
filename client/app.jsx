@@ -5,9 +5,9 @@ import AppContext from './lib/app-context';
 import PageContainer from './components/page-container';
 import Header from './components/header';
 import Footer from './components/footer';
-import YelpSearch from "./pages/yelp-search";
+import YelpSearch from './pages/yelp-search';
 import parseRoute from './lib/parse-route';
-import FoodChoice from "./pages/food-choice"
+import FoodChoice from './pages/food-choice';
 import client from './lib/client';
 
 /**
@@ -39,8 +39,6 @@ export default class App extends React.Component {
     const { username, room } = result;
     this.setState({ username, room });
     // Create a user class later
-    // Put the user inside of a chatroom'
-    // console.log(client);
     this.state.client.joinRoom({ username, room });
     // client.joinRoom({username, room});
     // client({username, room});
@@ -56,32 +54,39 @@ export default class App extends React.Component {
   renderPage() {
     const { path } = this.state.route;
     const { username, room } = this.state;
-    return <FoodChoice/>
 
-    //Temporary until i finish foodChoice page
+    if (path === '' && !username) {
+      return <Login onSignIn={this.handleSignIn} />;
+    }
+
+    if (path === 'chat-room' && username) {
+      return (
+        <ChatRoom
+          onSendMessage={
+            message => {
+              const messageToServer = { username, room, message };
+              this.state.client.sendMessage(messageToServer);
+            }
+          }
+          listenMessage={this.state.client.listenMessage}
+          stopListening={this.state.client.stopListening}
+        />
+      );
+    }
+
+    if (path === 'search' && username) {
+      return <YelpSearch/>;
+    }
+
+    if (path === 'game' && username) {
+      return <FoodChoice/>;
+    }
+
+    return <FoodChoice/>;
+
+    // Temporary until i finish foodChoice page
     // return <YelpSearch/>;
     // Temporary to get the app started
-
-
-    //Commenting until i finish the search page
-    // if (path === 'chat-room' && username) {
-
-    //   return (
-    //     <ChatRoom
-    //       onSendMessage={
-    //         message => {
-    //           const messageToServer = { username, room, message };
-    //           this.state.client.sendMessage(messageToServer);
-    //         }
-    //       }
-    //       listenMessage={this.state.client.listenMessage}
-    //       stopListening={this.state.client.stopListening}
-    //     />
-    //   );
-    // }
-    // if (path === '' && !username) {
-    //   return <Login onSignIn={this.handleSignIn}/>;
-    // }
   }
 
   render() {
