@@ -7,6 +7,7 @@ import Header from './components/header';
 import Footer from './components/footer';
 import YelpSearch from "./pages/yelp-search";
 import parseRoute from './lib/parse-route';
+import FoodChoice from "./pages/food-choice"
 import client from './lib/client';
 
 /**
@@ -54,11 +55,16 @@ export default class App extends React.Component {
 
   renderPage() {
     const { path } = this.state.route;
-    return <YelpSearch/>;
+    const { username, room } = this.state;
+    return <FoodChoice/>
+
+    //Temporary until i finish foodChoice page
+    // return <YelpSearch/>;
     // Temporary to get the app started
+
+
     //Commenting until i finish the search page
-    // if (path === 'chat-room') {
-    //   const { username, room } = this.state;
+    // if (path === 'chat-room' && username) {
 
     //   return (
     //     <ChatRoom
@@ -73,7 +79,7 @@ export default class App extends React.Component {
     //     />
     //   );
     // }
-    // if (path === '') {
+    // if (path === '' && !username) {
     //   return <Login onSignIn={this.handleSignIn}/>;
     // }
   }
