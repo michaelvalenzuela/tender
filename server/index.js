@@ -85,10 +85,24 @@ io.on('connection', socket => {
       .emit('message', messageToClient);
   });
 
-  //What to do for game knowledge
+  // What to do for game knowledge
   socket.on('game', messageFromClient => {
+    // Message from client should say if someone wants to start game
+    // Set true
+    // Emit to the room and change their route
+    // message should have the room
 
-  })
+    // Test for now
+    const { room, route, business } = messageFromClient;
+
+    const messageToClient = {
+      route,
+      business
+    };
+
+    io.to(room)
+      .emit('game', messageToClient);
+  });
 
   // What to do when a socket disconnects
   socket.on('disconnect', () => {

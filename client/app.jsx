@@ -25,6 +25,8 @@ export default class App extends React.Component {
     };
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleAddYelpSearch = this.handleAddYelpSearch.bind(this);
+    this.handleStartGame = this.handleStartGame.bind(this);
+    this.onGameMessageReceived = this.onGameMessageReceived.bind(this);
   }
 
   componentDidMount() {
@@ -42,8 +44,16 @@ export default class App extends React.Component {
     this.setState({ username, room });
     // Create a user class later
     this.state.client.joinRoom({ username, room });
+    this.state.client.listenGame(this.onGameMessageReceived);
     // client.joinRoom({username, room});
     // client({username, room});
+  }
+
+  onGameMessageReceived(messageFromServer) {
+    if (messageFromServer.business) {
+      this.setState({ yelpChoices: messageFromServer.business });
+    }
+    window.location.hash = messageFromServer.route;
   }
 
   handleSignOut() {
@@ -53,8 +63,23 @@ export default class App extends React.Component {
     });
   }
 
-  handleAddYelpSearch(business){
+  handleAddYelpSearch(business) {
     this.setState({ yelpChoices: business });
+    const messageToServer = {
+      room: this.state.room,
+      route: 'game',
+      business
+    };
+    this.state.client.sendGameMessage(messageToServer);
+  }
+
+  // This will start the game listener to pass notifications back and forth
+  handleStartGame() {
+    const messageToServer = {
+      room: this.state.room,
+      route: 'search'
+    };
+    this.state.client.sendGameMessage(messageToServer);
   }
 
   renderPage() {
@@ -76,6 +101,7 @@ export default class App extends React.Component {
           }
           listenMessage={this.state.client.listenMessage}
           stopListening={this.state.client.stopListening}
+          handleStartGame = {this.handleStartGame}
         />
       );
     }

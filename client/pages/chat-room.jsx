@@ -79,7 +79,7 @@ export default class ChatRoom extends React.Component {
   }
 
   handleStartGame() {
-    window.location.hash = 'search';
+    this.props.handleStartGame();
   }
 
   render() {
