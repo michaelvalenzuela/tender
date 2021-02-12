@@ -3,13 +3,25 @@ import StarRating from "../components/star-rating";
 import Categories from "../components/categories";
 
 
-export default function SearchResult(props){
+export default class SearchResult extends React.Component{
+  constructor(props){
+    super(props);
 
-    if (!props.business) {
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(){
+    this.props.onAddYelp(this.props.business);
+    //For now to go to the next page
+    window.location.hash = "game";
+  }
+
+  render(){
+    if (!this.props.business) {
       return (<div />);
     }
 
-    const {name, rating, review_count, image_url, categories, url} = props.business;
+    const { name, rating, review_count, image_url, categories, url, onAddYelp } = this.props.business;
 
     return(
       <div className="row border mt-2">
@@ -31,8 +43,9 @@ export default function SearchResult(props){
           </div>
         </div>
         <div className="col col-lg-2 border text-center d-flex justify-content-center align-items-center border-start-0">
-          <button className="btn btn-primary">Add</button>
+          <button onClick={this.handleClick} className="btn btn-primary">Add</button>
         </div>
       </div>
     );
+  }
 }

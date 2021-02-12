@@ -19,10 +19,12 @@ export default class App extends React.Component {
     this.state = {
       username: null,
       room: '',
+      yelpChoices: {},
       client: client(),
       route: parseRoute(window.location.hash)
     };
     this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleAddYelpSearch = this.handleAddYelpSearch.bind(this);
   }
 
   componentDidMount() {
@@ -51,6 +53,10 @@ export default class App extends React.Component {
     });
   }
 
+  handleAddYelpSearch(business){
+    this.setState({ yelpChoices: business });
+  }
+
   renderPage() {
     const { path } = this.state.route;
     const { username, room } = this.state;
@@ -75,18 +81,22 @@ export default class App extends React.Component {
     }
 
     if (path === 'search' && username) {
-      return <YelpSearch/>;
+      return (
+      <YelpSearch
+        onAddYelp={this.handleAddYelpSearch}
+      />
+      );
     }
 
     if (path === 'game' && username) {
-      return <FoodChoice/>;
+      return (
+        <FoodChoice
+          yelpBusiness={this.state.yelpChoices}
+        />
+      );
     }
 
-    return <FoodChoice/>;
-
-    // Temporary until i finish foodChoice page
-    // return <YelpSearch/>;
-    // Temporary to get the app started
+    return <Login onSignIn={this.handleSignIn} />;
   }
 
   render() {

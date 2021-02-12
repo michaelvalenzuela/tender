@@ -85,6 +85,11 @@ io.on('connection', socket => {
       .emit('message', messageToClient);
   });
 
+  //What to do for game knowledge
+  socket.on('game', messageFromClient => {
+
+  })
+
   // What to do when a socket disconnects
   socket.on('disconnect', () => {
     const socketInfo = socketIds.find(x => x.socketId === socket.id);

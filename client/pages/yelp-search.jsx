@@ -10,13 +10,17 @@ export default class YelpSearch extends React.Component {
       isLoading: false
     };
     this.getYelpBusinesses = this.getYelpBusinesses.bind(this);
-
+    // this.addYelpBusiness = this.addYelpBusiness.bind(this);
   }
 
   getYelpBusinesses(result) {
     this.setState({ yelpBusinesses: result });
-    window.location.hash = 'chat-room';
   }
+
+  //add later
+  // removeYelpBusiness(){
+
+  // }
 
   render() {
     return (
@@ -29,6 +33,7 @@ export default class YelpSearch extends React.Component {
             <SearchResult
               key={business.id}
               business={business}
+              onAddYelp={this.props.onAddYelp}
             />
           )
         }

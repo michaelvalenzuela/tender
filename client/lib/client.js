@@ -13,8 +13,16 @@ export default function () {
     socket.emit('message', { username, room, message });
   }
 
+  function sendYelpBusiness(yelpBusiness) {
+    socket.emit('game', yelpBusiness);
+  }
+
   function listenMessage(message) {
     socket.on('message', message);
+  }
+
+  function listenGame(business){
+    socket.on('game', business);
   }
 
   function stopListening() {
@@ -25,6 +33,7 @@ export default function () {
     joinRoom,
     sendMessage,
     listenMessage,
-    stopListening
+    stopListening,
+    listenGame
   };
 }
