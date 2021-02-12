@@ -13,15 +13,15 @@ export default function () {
     socket.emit('message', { username, room, message });
   }
 
-  function sendYelpBusiness(yelpBusiness) {
-    socket.emit('game', yelpBusiness);
+  function sendGameMessage(message) {
+    socket.emit('game', message);
   }
 
   function listenMessage(message) {
     socket.on('message', message);
   }
 
-  function listenGame(business){
+  function listenGame(business) {
     socket.on('game', business);
   }
 
@@ -29,11 +29,17 @@ export default function () {
     socket.off('message');
   }
 
+  function stopListeningGame() {
+    socket.off('game');
+  }
+
   return {
     joinRoom,
     sendMessage,
+    sendGameMessage,
     listenMessage,
     stopListening,
-    listenGame
+    listenGame,
+    stopListeningGame
   };
 }
