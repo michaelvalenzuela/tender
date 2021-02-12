@@ -5,6 +5,7 @@ export default class FoodChoice extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      //Change later to deal with state, for now get it to work
       yelpBusiness: {},
       isPlaying: false
     };
@@ -13,12 +14,9 @@ export default class FoodChoice extends React.Component {
     this.yelpList = [];
     //List of BusinessLikes
     this.yelpLikes = [];
+    this.handleUserChoice = this.handleUserChoice.bind(this);
 
   }
-
-  // getYelpList(){
-
-  // }
 
   //Pass a function to the foodCard, when they push like or dislike come back to here and do logic
   handleUserChoice(like){
@@ -28,9 +26,10 @@ export default class FoodChoice extends React.Component {
     else{
       //Remove from array
     }
+  }
     //Change yelpBusiness state to the next card in the array
 
-  }
+  // }
 
   //This page will be where users start to match their likes
   //The server will send the user a list
@@ -43,9 +42,14 @@ export default class FoodChoice extends React.Component {
   //End game
   render(){
     //Add logic to only display this if yelpList is not empty, else display a Loading page waiting for other players...
+
+    //for now
     return(
       <div className="d-flex justify-content-center align-items-center">
-        <FoodCard/>
+        <FoodCard
+          business={this.props.yelpBusiness}
+          handleUserChoice = {this.handleUserChoice}
+        />
       </div>
     );
   }

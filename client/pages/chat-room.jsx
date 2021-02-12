@@ -19,6 +19,7 @@ export default class ChatRoom extends React.Component {
     this.onMessageReceived = this.onMessageReceived.bind(this);
     this.updateChat = this.updateChat.bind(this);
     this.updateUsers = this.updateUsers.bind(this);
+    this.handleStartGame = this.handleStartGame.bind(this);
   }
 
   componentDidMount() {
@@ -36,8 +37,13 @@ export default class ChatRoom extends React.Component {
 
   // Modify all this... trash
   onMessageReceived(messageFromServer) {
-    const { message, users } = messageFromServer;
-    this.updateChat(message);
+    const { message, users, chatHistory } = messageFromServer;
+    if (!this.state.chatMessages.length) {
+      this.updateChatHistory(chatHistory);
+    } else if (message) {
+      this.updateChat(message);
+    }
+
     if (users) {
       this.updateUsers(users);
     }
@@ -49,6 +55,10 @@ export default class ChatRoom extends React.Component {
 
   updateUsers(users) {
     this.setState({ users });
+  }
+
+  updateChatHistory(chatHistory) {
+    this.setState({ chatMessages: chatHistory });
   }
 
   handleChange(event) {
@@ -66,6 +76,10 @@ export default class ChatRoom extends React.Component {
     return this.setState({ message: '' });
     // When we return from this, we should update the chatMessages
     // rerender
+  }
+
+  handleStartGame() {
+    window.location.hash = 'search';
   }
 
   render() {
@@ -125,6 +139,11 @@ export default class ChatRoom extends React.Component {
                   autoComplete="off" />
                 <button className="btn btn-primary ms-2">Send</button>
               </form>
+            </div>
+            <div className="row">
+              <button
+                onClick={this.handleStartGame}
+                className="btn btn-success">Start Game</button>
             </div>
           </div>
         </div>
