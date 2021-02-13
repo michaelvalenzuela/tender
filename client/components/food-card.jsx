@@ -10,7 +10,12 @@ export default class FoodCard extends React.Component{
 
   handleUserChoice(event){
     //Send this back to the user
-    this.props.handleUserChoice(true);
+    if(event.target.name === "like"){
+      this.props.handleUserChoice(this.props.business);
+    }
+    else {
+      this.props.handleUserChoice("");
+    }
   }
 
   render(){
@@ -33,7 +38,7 @@ export default class FoodCard extends React.Component{
           <div className="d-flex justify-content-center align-items-center">
             <button onClick={this.handleUserChoice} className="btn btn-danger"><i className="fas fa-times"></i></button>
             <a href={url} rel="noopener noreferrer" target="_blank" className="btn"><i className="fab fa-yelp"></i></a>
-            <button onClick={this.handleUserChoice} className="btn btn-success"><i className="fas fa-check"></i></button>
+            <button onClick={this.handleUserChoice} name="like" className="btn btn-success"><i className="fas fa-check"></i></button>
           </div>
         </div>
       </div>

@@ -39,6 +39,8 @@ const rooms = [];
 const socketIds = [];
 // Contains chat history of a room. roomChatHistory['roomname'] = [all messages]
 const roomChatHistory = [];
+// List of all the businesses that were liked
+const listOfBusinesses = new Set();
 io.on('connection', socket => {
 
   // What to do when a socket joins the room
