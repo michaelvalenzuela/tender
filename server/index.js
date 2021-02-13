@@ -39,8 +39,10 @@ const rooms = [];
 const socketIds = [];
 // Contains chat history of a room. roomChatHistory['roomname'] = [all messages]
 const roomChatHistory = [];
-// List of all the businesses that were liked
-const listOfBusinesses = new Set();
+// should be a list of business for rooms
+const roomsListOfBusinesses = [];
+// Array that contains rooms and booleans, if there are enough booleans then proceed
+const readyRooms = [];
 io.on('connection', socket => {
 
   // What to do when a socket joins the room
@@ -89,21 +91,53 @@ io.on('connection', socket => {
 
   // What to do for game knowledge
   socket.on('game', messageFromClient => {
-    // Message from client should say if someone wants to start game
-    // Set true
+    // If route = game then begin the game, send the user the list of businesses instead
     // Emit to the room and change their route
     // message should have the room
 
     // Test for now
-    const { room, route, business } = messageFromClient;
+    let { room, route, business } = messageFromClient;
 
-    const messageToClient = {
-      route,
-      business
-    };
+    if (business) {
+      if (!roomsListOfBusinesses[room]) {
+        roomsListOfBusinesses[room] = new Set();
+      }
+      business.forEach(x => roomsListOfBusinesses[room].add(x));
+    }
 
-    io.to(room)
-      .emit('game', messageToClient);
+    if (!readyRooms[room]) {
+      readyRooms[room] = new Set();
+    } else {
+      readyRooms[room].add(socket.id);
+    }
+
+    if (route === 'wait') {
+      // check if everyone is done
+      // if not then dont send a business
+      if (rooms[room].length !== readyRooms[room].size) {
+        route = 'wait';
+        const messageToClient = {
+          route
+        };
+        socket.emit('game', messageToClient);
+      } else {
+        route = 'game';
+        const messageToClient = {
+          route,
+          business: Array.from(roomsListOfBusinesses[room])
+        };
+        io.to(room)
+          .emit('game', messageToClient);
+      }
+    } else {
+      const messageToClient = {
+        route,
+        business
+      };
+      io.to(room)
+        .emit('game', messageToClient);
+    }
+
   });
 
   // What to do when a socket disconnects
@@ -123,9 +157,13 @@ io.on('connection', socket => {
     };
 
     // Clear roomChatHistory if no users are left in a room
-    !rooms[room].length
-      ? roomChatHistory[room] = []
-      : roomChatHistory[room].push(messageToClient.message);
+    if (!rooms[room].length) {
+      roomChatHistory[room] = [];
+      readyRooms[room] = null;
+      roomsListOfBusinesses[room] = null;
+    } else {
+      roomChatHistory[room].push(messageToClient.message);
+    }
 
     io.emit('message', messageToClient);
   });

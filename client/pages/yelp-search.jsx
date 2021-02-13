@@ -16,26 +16,25 @@ export default class YelpSearch extends React.Component {
   }
 
   getYelpBusinesses(result) {
-    if(this.addedBusinesses.length !== 0){
+    if (this.addedBusinesses.length !== 0) {
       result = result.filter(({ id: idResult }) => !this.addedBusinesses.some(({ id: idLikedBusiness }) => idResult === idLikedBusiness));
     }
     this.setState({ yelpBusinesses: result });
   }
 
-  //2 layers of adding, add to the list of this
-  //Once the list is ready, use the onAddYelp to send the list to the APP
-  //App will then send a message
+  // 2 layers of adding, add to the list of this
+  // Once the list is ready, use the onAddYelp to send the list to the APP
+  // App will then send a message
 
-  //This will remove it from the list and trigger a reRender
-  addLikedYelpBusiness(business){
+  // This will remove it from the list and trigger a reRender
+  addLikedYelpBusiness(business) {
     this.addedBusinesses.push(business);
     const removedYelpList = this.state.yelpBusinesses.filter(x => x.id !== business.id);
-    this.setState({yelpBusinesses: removedYelpList });
+    this.setState({ yelpBusinesses: removedYelpList });
   }
 
-  onAddYelpLikes(){
+  onAddYelpLikes() {
     this.props.onAddYelp(this.addedBusinesses);
-    window.location.hash = "game";
   }
 
   render() {
