@@ -11,9 +11,10 @@ export default class SearchResult extends React.Component{
   }
 
   handleClick(){
-    this.props.onAddYelp(this.props.business);
+    this.props.addLikedYelpBusiness(this.props.business);
+    // this.props.onAddYelp(this.props.business);
     //For now to go to the next page
-    window.location.hash = "game";
+    // window.location.hash = "game";
   }
 
   render(){

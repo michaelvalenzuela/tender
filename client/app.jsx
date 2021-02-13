@@ -19,7 +19,7 @@ export default class App extends React.Component {
     this.state = {
       username: null,
       room: '',
-      yelpChoices: {},
+      yelpChoices: [],
       client: client(),
       route: parseRoute(window.location.hash)
     };

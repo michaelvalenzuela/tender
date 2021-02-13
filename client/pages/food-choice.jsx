@@ -6,30 +6,30 @@ export default class FoodChoice extends React.Component {
     super(props);
     this.state = {
       //Change later to deal with state, for now get it to work
-      yelpBusiness: {},
+      yelpBusiness: this.props.yelpBusiness.pop(),
       isPlaying: false
     };
 
-    //List of Businesses from server
-    this.yelpList = [];
+    this.yelpList = this.props.yelpBusiness;
     //List of BusinessLikes
     this.yelpLikes = [];
     this.handleUserChoice = this.handleUserChoice.bind(this);
-
   }
 
   //Pass a function to the foodCard, when they push like or dislike come back to here and do logic
-  handleUserChoice(like){
-    if(like){
+  handleUserChoice(business){
+    if(business){
       //Add to another array
+      this.yelpLikes.push(business);
+    }
+    const nextBusiness = this.yelpList.pop();
+    if (nextBusiness) {
+      this.setState({ yelpBusiness: nextBusiness });
     }
     else{
-      //Remove from array
+      //Send back to server then load a screen that says wait
     }
   }
-    //Change yelpBusiness state to the next card in the array
-
-  // }
 
   //This page will be where users start to match their likes
   //The server will send the user a list
@@ -41,13 +41,11 @@ export default class FoodChoice extends React.Component {
   //Send it back to the users
   //End game
   render(){
-    //Add logic to only display this if yelpList is not empty, else display a Loading page waiting for other players...
-
-    //for now
+    // console.log("render");
     return(
       <div className="d-flex justify-content-center align-items-center">
         <FoodCard
-          business={this.props.yelpBusiness}
+          business={this.state.yelpBusiness}
           handleUserChoice = {this.handleUserChoice}
         />
       </div>
