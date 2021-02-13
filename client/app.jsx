@@ -8,6 +8,7 @@ import Footer from './components/footer';
 import YelpSearch from './pages/yelp-search';
 import parseRoute from './lib/parse-route';
 import FoodChoice from './pages/food-choice';
+import WaitRoom from './pages/wait-room';
 import client from './lib/client';
 
 /**
@@ -50,6 +51,7 @@ export default class App extends React.Component {
   }
 
   onGameMessageReceived(messageFromServer) {
+    // Check for a waiting route, if it is then we wait for other users to finish
     if (messageFromServer.business) {
       this.setState({ yelpChoices: messageFromServer.business });
     }
@@ -64,10 +66,13 @@ export default class App extends React.Component {
   }
 
   handleAddYelpSearch(business) {
+    // This wouldve gotten the list of choices from a user
     this.setState({ yelpChoices: business });
+    // Send all that to the server
+    // This is after the user has selected all of their businesses
     const messageToServer = {
       room: this.state.room,
-      route: 'game',
+      route: 'wait',
       business
     };
     this.state.client.sendGameMessage(messageToServer);
@@ -88,9 +93,7 @@ export default class App extends React.Component {
 
     if (path === '' && !username) {
       return <Login onSignIn={this.handleSignIn} />;
-    }
-
-    if (path === 'chat-room' && username) {
+    } else if (path === 'chat-room' && username) {
       return (
         <ChatRoom
           onSendMessage={
@@ -104,25 +107,25 @@ export default class App extends React.Component {
           handleStartGame = {this.handleStartGame}
         />
       );
-    }
-
-    if (path === 'search' && username) {
+    } else if (path === 'search' && username) {
       return (
       <YelpSearch
         onAddYelp={this.handleAddYelpSearch}
       />
       );
-    }
-
-    if (path === 'game' && username) {
+    } else if (path === 'game' && username) {
       return (
         <FoodChoice
           yelpBusiness={this.state.yelpChoices}
         />
       );
+    } else if (path === 'wait' && username) {
+      return (
+        <WaitRoom/>
+      );
+    } else {
+      return <Login onSignIn={this.handleSignIn} />;
     }
-
-    return <Login onSignIn={this.handleSignIn} />;
   }
 
   render() {
