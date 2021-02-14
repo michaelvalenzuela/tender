@@ -22,6 +22,7 @@ export default class App extends React.Component {
       username: null,
       room: '',
       yelpChoices: [],
+      yelpWinner: {},
       client: client(),
       route: parseRoute(window.location.hash)
     };
@@ -59,11 +60,11 @@ export default class App extends React.Component {
   onGameMessageReceived(messageFromServer) {
     // Check for a waiting route, if it is then we wait for other users to finish
     if (messageFromServer.business) {
-      console.log("Received:",messageFromServer.business)
       this.setState({ yelpChoices: messageFromServer.business });
     }
     if(messageFromServer.yelpWinner){
-      console.log(messageFromServer.yelpWinner);
+      this.setState({ yelpWinner: messageFromServer.yelpWinner});
+      // this.yelpWinner = messageFromServer.yelpWinner;
     }
     window.location.hash = messageFromServer.route;
   }
@@ -148,7 +149,9 @@ export default class App extends React.Component {
     }
       else if(path ==="winner" && username){
         return(
-          <WinnerRoom/>
+          <WinnerRoom
+            business={this.state.yelpWinner}
+          />
         );
       }
     else {

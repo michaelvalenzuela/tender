@@ -24,7 +24,6 @@ export default class FoodChoice extends React.Component {
       this.yelpLikes.push(business);
     }
     const nextBusiness = this.yelpList.pop();
-    console.log(nextBusiness);
     if (nextBusiness) {
       this.setState({ yelpBusiness: nextBusiness });
     } else {

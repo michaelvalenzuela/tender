@@ -7,7 +7,7 @@ export default function WinnerCard(props){
     return (<div />);
   }
 
-  const { name, rating, review_count, image_url, categories, url, location } = this.props.business;
+  const { name, rating, review_count, image_url, categories, url, location } = props.business;
   const { city, state } = location;
 
   return(

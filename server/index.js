@@ -43,6 +43,8 @@ const roomChatHistory = [];
 const roomsListOfBusinesses = [];
 // Array that contains rooms and booleans, if there are enough booleans then proceed
 const readyRooms = [];
+//Array for the likes
+const roomLikes = [];
 io.on('connection', socket => {
 
   // What to do when a socket joins the room
@@ -135,9 +137,14 @@ io.on('connection', socket => {
     }
     //Logic for winner route
     else if(route === "winner"){
-      console.log(rooms[room]);
-      console.log(readyRooms[room]);
-      console.log(yelpLikes);
+      if(!roomLikes[room]){
+        roomLikes[room] = [];
+      }
+
+      for(item of yelpLikes){
+        roomLikes[room].push(item);
+      }
+
       if (rooms[room].length !== readyRooms[room].size) {
         route = "wait";
         const messageToClient = {
@@ -148,11 +155,22 @@ io.on('connection', socket => {
       else{
 
         //Shuffle the winners,
+        for (let i = roomLikes[room].length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [roomLikes[room][i], roomLikes[room][j]] = [roomLikes[room][j], roomLikes[room][i]];
+        }
+
+        const winner = roomLikes[room].sort((a, b) =>
+          roomLikes[room].filter(v => v.id === a.id).length
+          - roomLikes[room].filter(v => v.id === b.id).length
+        ).pop();
+
         route = "winner";
         const messageToClient = {
           route: "winner",
-          yelpWinner: "abc"
+          yelpWinner: winner
         }
+        delete roomLikes[room];
         io.to(room)
           .emit('game', messageToClient);
       }
