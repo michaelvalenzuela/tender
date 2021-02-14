@@ -28,7 +28,7 @@ export default class FoodChoice extends React.Component {
       this.setState({ yelpBusiness: nextBusiness });
     } else {
       // Send back to server then load a screen that says wait
-
+      this.props.sendLikes(this.yelpLikes);
     }
   }
 

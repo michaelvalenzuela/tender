@@ -43,6 +43,8 @@ const roomChatHistory = [];
 const roomsListOfBusinesses = [];
 // Array that contains rooms and booleans, if there are enough booleans then proceed
 const readyRooms = [];
+//Array for the likes
+const roomLikes = [];
 io.on('connection', socket => {
 
   // What to do when a socket joins the room
@@ -96,7 +98,7 @@ io.on('connection', socket => {
     // message should have the room
 
     // Test for now
-    let { room, route, business } = messageFromClient;
+    let { room, route, business, yelpLikes} = messageFromClient;
 
     if (business) {
       if (!roomsListOfBusinesses[room]) {
@@ -122,14 +124,59 @@ io.on('connection', socket => {
         socket.emit('game', messageToClient);
       } else {
         route = 'game';
+        //Note: theres an issue with a business being lost, might need to serialize
         const messageToClient = {
           route,
           business: Array.from(roomsListOfBusinesses[room])
         };
+        //Reset the ready room
+        readyRooms[room] = new Set();
         io.to(room)
           .emit('game', messageToClient);
       }
-    } else {
+    }
+    //Logic for winner route
+    else if(route === "winner"){
+      if(!roomLikes[room]){
+        roomLikes[room] = [];
+      }
+
+      for(item of yelpLikes){
+        roomLikes[room].push(item);
+      }
+
+      if (rooms[room].length !== readyRooms[room].size) {
+        route = "wait";
+        const messageToClient = {
+          route: "wait"
+        }
+        socket.emit("game", messageToClient);
+      }
+      else{
+
+        //Shuffle the winners,
+        for (let i = roomLikes[room].length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [roomLikes[room][i], roomLikes[room][j]] = [roomLikes[room][j], roomLikes[room][i]];
+        }
+
+        const winner = roomLikes[room].sort((a, b) =>
+          roomLikes[room].filter(v => v.id === a.id).length
+          - roomLikes[room].filter(v => v.id === b.id).length
+        ).pop();
+
+        route = "winner";
+        const messageToClient = {
+          route: "winner",
+          yelpWinner: winner
+        }
+        delete roomLikes[room];
+        io.to(room)
+          .emit('game', messageToClient);
+      }
+    }
+    //For search
+    else {
       const messageToClient = {
         route,
         business
