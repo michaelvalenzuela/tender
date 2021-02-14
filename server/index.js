@@ -96,7 +96,7 @@ io.on('connection', socket => {
     // message should have the room
 
     // Test for now
-    let { room, route, business } = messageFromClient;
+    let { room, route, business, yelpLikes} = messageFromClient;
 
     if (business) {
       if (!roomsListOfBusinesses[room]) {
@@ -122,14 +122,43 @@ io.on('connection', socket => {
         socket.emit('game', messageToClient);
       } else {
         route = 'game';
+        //Note: theres an issue with a business being lost, might need to serialize
         const messageToClient = {
           route,
           business: Array.from(roomsListOfBusinesses[room])
         };
+        //Reset the ready room
+        readyRooms[room] = new Set();
         io.to(room)
           .emit('game', messageToClient);
       }
-    } else {
+    }
+    //Logic for winner route
+    else if(route === "winner"){
+      console.log(rooms[room]);
+      console.log(readyRooms[room]);
+      console.log(yelpLikes);
+      if (rooms[room].length !== readyRooms[room].size) {
+        route = "wait";
+        const messageToClient = {
+          route: "wait"
+        }
+        socket.emit("game", messageToClient);
+      }
+      else{
+
+        //Shuffle the winners,
+        route = "winner";
+        const messageToClient = {
+          route: "winner",
+          yelpWinner: "abc"
+        }
+        io.to(room)
+          .emit('game', messageToClient);
+      }
+    }
+    //For search
+    else {
       const messageToClient = {
         route,
         business

@@ -24,11 +24,12 @@ export default class FoodChoice extends React.Component {
       this.yelpLikes.push(business);
     }
     const nextBusiness = this.yelpList.pop();
+    console.log(nextBusiness);
     if (nextBusiness) {
       this.setState({ yelpBusiness: nextBusiness });
     } else {
       // Send back to server then load a screen that says wait
-
+      this.props.sendLikes(this.yelpLikes);
     }
   }
 

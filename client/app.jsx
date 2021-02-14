@@ -9,6 +9,7 @@ import YelpSearch from './pages/yelp-search';
 import parseRoute from './lib/parse-route';
 import FoodChoice from './pages/food-choice';
 import WaitRoom from './pages/wait-room';
+import WinnerRoom from './pages/winner-room';
 import client from './lib/client';
 
 /**
@@ -28,6 +29,7 @@ export default class App extends React.Component {
     this.handleAddYelpSearch = this.handleAddYelpSearch.bind(this);
     this.handleStartGame = this.handleStartGame.bind(this);
     this.onGameMessageReceived = this.onGameMessageReceived.bind(this);
+    this.handleSendLikes = this.handleSendLikes.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +39,10 @@ export default class App extends React.Component {
       });
     });
 
+  }
+
+  componentWillUnmount() {
+    this.state.client.stopListeningGame();
   }
 
   handleSignIn(result) {
@@ -53,7 +59,11 @@ export default class App extends React.Component {
   onGameMessageReceived(messageFromServer) {
     // Check for a waiting route, if it is then we wait for other users to finish
     if (messageFromServer.business) {
+      console.log("Received:",messageFromServer.business)
       this.setState({ yelpChoices: messageFromServer.business });
+    }
+    if(messageFromServer.yelpWinner){
+      console.log(messageFromServer.yelpWinner);
     }
     window.location.hash = messageFromServer.route;
   }
@@ -65,9 +75,20 @@ export default class App extends React.Component {
     });
   }
 
+  handleSendLikes(businesses){
+    const messageToServer = {
+      room: this.state.room,
+      route: 'winner',
+      yelpLikes: businesses
+    }
+    console.log(messageToServer);
+    this.state.client.sendGameMessage(messageToServer);
+  }
+
   handleAddYelpSearch(business) {
     // This wouldve gotten the list of choices from a user
     this.setState({ yelpChoices: business });
+    console.log("add yelp:",business);
     // Send all that to the server
     // This is after the user has selected all of their businesses
     const messageToServer = {
@@ -117,13 +138,20 @@ export default class App extends React.Component {
       return (
         <FoodChoice
           yelpBusiness={this.state.yelpChoices}
+          sendLikes={this.handleSendLikes}
         />
       );
     } else if (path === 'wait' && username) {
       return (
         <WaitRoom/>
       );
-    } else {
+    }
+      else if(path ==="winner" && username){
+        return(
+          <WinnerRoom/>
+        );
+      }
+    else {
       return <Login onSignIn={this.handleSignIn} />;
     }
   }
